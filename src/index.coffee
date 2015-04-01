@@ -1,17 +1,21 @@
+ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
+
 GlyphIcon = React.createClass({ render: -> <span className={"glyphicon glyphicon-" + @props.icon}></span> })
 
 PropertyListControl = React.createClass({
   render: ->
     <div>
-      { _.map @props.properties, (p) => 
-        <PropertyControl key={p.id} property={p}
+      <ReactCSSTransitionGroup transitionName="items">
+        { _.map @props.properties, (p) => 
+          <PropertyControl key={p.id} property={p}
+            onSave={@props.onSave}
+            onRemove={@props.onRemove}
+          />
+        }
+        <PropertyControl key="new" property={ name: {} }
           onSave={@props.onSave}
-          onRemove={@props.onRemove}
         />
-      }
-      <PropertyControl key="new" property={ name: {} }
-        onSave={@props.onSave}
-      />
+      </ReactCSSTransitionGroup>
     </div>
 })
 
@@ -29,7 +33,7 @@ PropertyControl = React.createClass({
 
   save: ->
     @setState({ saving: true })
-    @props.onSave @props.property.id, @state.updates, (err) =>
+    @props.onSave @props.property, @state.updates, (err) =>
       @setState({ saving: false, updates: {} })
 
   cancel: ->
@@ -47,14 +51,14 @@ PropertyControl = React.createClass({
 
     <div style={border: "solid 1px #DDD", margin: 10, borderRadius: 5, padding: 5, backgroundColor: "#EEE"}>
       <div style={chunk}>
-        <small>Code</small>
+        <small className="text-muted">Code</small>
         <br/>
         <input type="text" className="form-control" style={width: "20em"} 
           value={p.code}
           onChange={@handleCodeChange} />
       </div>
       <div style={chunk}>
-        <small>Type</small>
+        <small className="text-muted">Type</small>
         <br/>
         <select className="form-control" style={width: "auto"} 
           value={p.type}
@@ -64,7 +68,7 @@ PropertyControl = React.createClass({
         </select> 
       </div>
       <div style={chunk}>
-        <small>Name</small>
+        <small className="text-muted">Name</small>
         <br/>
         <input type="text" className="form-control" style={width: "25em"} 
           value={p.name.en}
@@ -101,16 +105,16 @@ $ ->
     { id: 2, code: "desc", type: "text", name: { en: "Desc"} }
   ]
 
-  onSave = (id, updates, cb) =>
+  onSave = (prop, updates, cb) =>
     setTimeout( ->
-      if id
-        _.extend(_.findWhere(properties, { id: id }), updates)
+      if prop.id
+        _.extend(_.findWhere(properties, { id: prop.id }), updates)
       else
         updates.id = _.max(properties, (p) -> p.id) + 1
         properties.push(updates)
       cb()
       render()
-    , 2000)
+    , 500)
 
 
   onRemove = (id, cb) =>
@@ -118,7 +122,7 @@ $ ->
       cb()
       properties = _.reject(properties, (p) -> p.id == id)
       render()
-    , 2000)
+    , 500)
 
   render = ->
     React.render(<PropertyListControl properties={properties} 

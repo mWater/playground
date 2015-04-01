@@ -33,7 +33,7 @@ gulp.task "libs_js", ->
     "./bower_components/lodash/dist/lodash.js"
     "./bower_components/backbone/backbone.js"
     "./bower_components/select2/select2.js"
-    "./bower_components/react/react.js"
+    "./bower_components/react/react-with-addons.js"
   ]).pipe(concat("libs.js"))
     .pipe(gulp.dest("./dist/js/"))
 
