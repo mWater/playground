@@ -5,12 +5,12 @@ PropertyListControl = React.createClass({
     <div>
       { _.map @props.properties, (p) => 
         <PropertyControl key={p.id} property={p}
-          onUpdate={@props.onUpdate}
+          onSave={@props.onSave}
           onRemove={@props.onRemove}
         />
       }
       <PropertyControl key="new" property={ name: {} }
-        onAdd={@props.onAdd}
+        onSave={@props.onSave}
       />
     </div>
 })
@@ -29,12 +29,8 @@ PropertyControl = React.createClass({
 
   save: ->
     @setState({ saving: true })
-    if @props.property.id?
-      @props.onUpdate @props.property.id, @state.updates, (err) =>
-        @setState({ saving: false, updates: {} })
-    else
-      @props.onAdd @state.updates, (err) =>
-        @setState({ saving: false, updates: {} })
+    @props.onSave @props.property.id, @state.updates, (err) =>
+      @setState({ saving: false, updates: {} })
 
   cancel: ->
     @setState({ updates: {} })
@@ -105,20 +101,17 @@ $ ->
     { id: 2, code: "desc", type: "text", name: { en: "Desc"} }
   ]
 
-  onAdd = (prop, cb) =>
-    setTimeout(->
-      prop.id = _.max(properties, (p) -> p.id) + 1
-      properties.push(prop)
+  onSave = (id, updates, cb) =>
+    setTimeout( ->
+      if id
+        _.extend(_.findWhere(properties, { id: id }), updates)
+      else
+        updates.id = _.max(properties, (p) -> p.id) + 1
+        properties.push(updates)
       cb()
       render()
     , 2000)
 
-  onUpdate = (id, updates, cb) =>
-    setTimeout(->
-      cb()
-      _.extend(_.findWhere(properties, { id: id }), updates)
-      render()
-    , 2000)
 
   onRemove = (id, cb) =>
     setTimeout(->
@@ -129,8 +122,7 @@ $ ->
 
   render = ->
     React.render(<PropertyListControl properties={properties} 
-      onAdd={onAdd}
-      onUpdate={onUpdate} 
+      onSave={onSave}
       onRemove={onRemove}/>, document.getElementById('root'))
 
   render()
