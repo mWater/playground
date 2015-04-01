@@ -5,6 +5,8 @@ source = require 'vinyl-source-stream'
 concat = require 'gulp-concat'
 rework = require 'gulp-rework'
 reworkNpm = require 'rework-npm'
+browserSync = require 'browser-sync'
+reload = browserSync.reload
 
 gulp.task "browserify", ->
   shim(browserify("./index.coffee",
@@ -31,6 +33,7 @@ gulp.task "libs_js", ->
     "./bower_components/lodash/dist/lodash.js"
     "./bower_components/backbone/backbone.js"
     "./bower_components/select2/select2.js"
+    "./bower_components/react/react.js"
   ]).pipe(concat("libs.js"))
     .pipe(gulp.dest("./dist/js/"))
 
@@ -63,6 +66,14 @@ gulp.task "build", gulp.parallel([
   "copy_fonts"
   "copy_assets"
   "index_css"
+])
+
+gulp.task 'serve', gulp.series([
+  'build'
+  gulp.parallel([
+    -> browserSync({ server: "./dist" })
+    -> gulp.watch("./src/**", gulp.series(['build', -> reload()]))
+  ])
 ])
 
 gulp.task "default", gulp.series("build")
