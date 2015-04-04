@@ -53,14 +53,14 @@ PropertyControl = React.createClass({
       <div style={chunk}>
         <small className="text-muted">Code</small>
         <br/>
-        <input type="text" className="form-control" style={width: "20em"} 
+        <input type="text" className="form-control input-sm" style={width: "20em"} 
           value={p.code}
           onChange={@handleCodeChange} />
       </div>
       <div style={chunk}>
         <small className="text-muted">Type</small>
         <br/>
-        <select className="form-control" style={width: "auto"} 
+        <select className="form-control input-sm" style={width: "auto"} 
           value={p.type}
           onChange={@handleTypeChange}>
           <option value="text">Text</option>
@@ -70,25 +70,25 @@ PropertyControl = React.createClass({
       <div style={chunk}>
         <small className="text-muted">Name</small>
         <br/>
-        <input type="text" className="form-control" style={width: "25em"} 
+        <input type="text" className="form-control input-sm" style={width: "25em"} 
           value={p.name.en}
           onChange={@handleNameChange} />
       </div>
       <div style={chunk}>
-        <button type="button" className="btn btn-link" 
+        <button type="button" className="btn btn-link btn-sm" 
           onClick={@remove}
           disabled={@state.removing} 
           style={display: (if not  @props.property.id? then "none")}> 
           <GlyphIcon icon="remove"/>
         </button>
-        <button type="button" className="btn btn-primary" 
+        <button type="button" className="btn btn-primary btn-sm" 
           onClick={@save} 
           disabled={@state.saving} 
           style={display: (if _.isEmpty(@state.updates) then "none")}> 
           Save
         </button>
         &nbsp;
-        <button type="button" className="btn btn-default" 
+        <button type="button" className="btn btn-default btn-sm" 
           onClick={@cancel} 
           disabled={@state.saving} 
           style={display: (if _.isEmpty(@state.updates) then "none")}> 
