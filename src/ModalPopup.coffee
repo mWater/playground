@@ -24,7 +24,7 @@ module.exports = React.createClass({
             H.h4({className: "modal-title"}, @props.title)
           )
           H.div({className: "modal-body"},
-            React.createElement(@props.childClass, @props.childParams)
+            this.props.children
           )
           H.div({className: "modal-footer"},
             H.form({onSubmit: @handleSave},

@@ -36,7 +36,9 @@ module.exports = React.createClass({
           )
         ),
         if @state.groupBeingEdited?
-          React.createElement(ModalPopup, {onClose: @onClose, onSave: @onSave, title: "Edit Group", childClass: EditGroup, childParams: {group: @state.groupBeingEdited}})
+          React.createElement(ModalPopup, {onClose: @onClose, onSave: @onSave, title: "Edit Group"},
+            React.createElement(EditGroup, {group: @state.groupBeingEdited})
+          )
       )
 
     return H.div(null,
