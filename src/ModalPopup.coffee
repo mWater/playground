@@ -14,7 +14,7 @@ module.exports = React.createClass({
       @props.onClose()
 
   render: ->
-    H.div({className: ""},
+    H.div({className: "modal show"},
       H.div({className: "modal-dialog"},
         H.div({className: "modal-content"},
           H.div({className: "modal-header"},
